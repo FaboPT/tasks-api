@@ -43,7 +43,7 @@ class TaskRepository extends BaseRepository
     {
         $task = $this->task->findOrFail($id);
 
-        if( (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier())  || (Auth::user()->hasRole('Manager') &&  $task->user()->hasRole('Technician'))) {
+        if( (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier())  || (Auth::user()->hasRole('Manager') &&  $task->user->hasRole('Technician'))) {
             return $task->delete();
         }
         return false;

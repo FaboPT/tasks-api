@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class TasksWithoutAuthentication extends TestCase
 {
-    public function test_get_tasks_without_authentication()
+    public function test_get_all_tasks_without_authentication()
     {
         $response = $this->json('get',route('task.index'));
 

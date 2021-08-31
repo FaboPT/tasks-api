@@ -33,6 +33,6 @@ class TaskPerformed
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('task-performed');
     }
 }

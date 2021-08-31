@@ -30,7 +30,7 @@ class TasksWithAuthenticationTechnician extends TestCase
 
     }
 
-    public function test_access_tasks_with_authentication_technician()
+    public function test_get_all_tasks_with_authentication_technician()
     {
         $this->actingAs($this->user_technician(),'api');
         $response = $this->json('get',route('task.index'),[],$this->headers());
@@ -57,7 +57,7 @@ class TasksWithAuthenticationTechnician extends TestCase
 
     public function test_update_tasks_with_authentication_technician()
     {
-        $this->actingAs($this->user_technician());
+        $this->actingAs($this->user_technician(),'api');
         $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
         $data = [
             'summary'=>'Task test 2',
@@ -71,15 +71,16 @@ class TasksWithAuthenticationTechnician extends TestCase
 
     public function test_set_performed_tasks_with_authentication_technician()
     {
-        $this->actingAs($this->user_technician());
+        $this->actingAs($this->user_technician(),'api');
         $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
         $response = $this->put(route('task.set_performed', $task),[],$this->headers());
 
         $response->assertJsonFragment(["success"=>true])->assertSuccessful();
+        $this->user_technician()->tokens()->delete();
     }
     public function test_destroy_tasks_with_authentication_technician()
     {
-        $this->actingAs($this->user_technician());
+        $this->actingAs($this->user_technician(),'api');
         $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
 
         $response = $this->delete(route('task.destroy', $task->id),[],$this->headers());
