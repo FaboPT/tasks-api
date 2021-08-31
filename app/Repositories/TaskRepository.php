@@ -20,8 +20,8 @@ class TaskRepository extends BaseRepository
 
     public function all(): Collection{
         return Auth::user()->hasRole('Technician') ?
-        $this->task->with('user')->myTasks(Auth::user()->getAuthIdentifier())->get() :
-            $this->task->with('user')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
+        $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name') :
+            $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
     }
 
     public function store(array $attributes): Model

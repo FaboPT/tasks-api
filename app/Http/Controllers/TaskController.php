@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskPerformed;
-use App\Http\Requests\TaskPerformedRequest;
 use App\Http\Requests\TaskRequest;
-use App\Models\Task;
+use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +27,7 @@ class TaskController extends Controller
      */
     public function index(): JsonResponse
     {
-        $tasks = $this->task_service->all();
+        $tasks = TaskResource::collection($this->task_service->all());
         return response()->json(['data' => $tasks, 'success' => true]);
     }
 
@@ -134,7 +131,6 @@ class TaskController extends Controller
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false,
