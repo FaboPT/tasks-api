@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Repositories\TaskRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class TaskService
 {
@@ -20,7 +21,7 @@ class TaskService
         return $this->taskRepository->all();
     }
 
-    public function store($data): Model
+    public function store(array $data): Model
     {
         return $this->taskRepository->store($data);
     }
@@ -31,17 +32,17 @@ class TaskService
     }
 
 
-    public function update($id,$data): bool
+    public function update(int $id,array $data): bool
     {
         return $this->taskRepository->update($id,$data);
     }
 
-    public function destroy($id): bool
+    public function destroy(int $id): bool
     {
         return $this->taskRepository->destroy($id);
     }
 
-    public function setStatus($id,$data): bool{
-        return $this->taskRepository->setStatus($id,$data);
+    public function setPerformed(int $id): bool{
+        return $this->taskRepository->setPerformed($id);
     }
 }
