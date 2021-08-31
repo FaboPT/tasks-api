@@ -58,9 +58,20 @@ docker-compose exec app php artisan key:generate
 ```
 docker-compose exec app php artisan migrate --seed
 ```
-### Open browser http://localhost:8000
+### URL http://localhost:8000
 ### Login
 - Go your database and seed the fake users created and choose one
 - Password for users -> **password**
+
+#### Create a Token
+- **POST** - http://localhost:8000/api/login
+
+#### TASKS Endpoints
+- **GET** http://localhost:8000/api/tasks -> Get tasks
+- **POST** http://localhost:8000/api/tasks -> Create a new task
+- **PUT** http://localhost:8000/api/tasks/{id} -> Update task
+- **DELETE** http://localhost:8000/api/tasks/{id} -> Delete task
+- **PUT** http://localhost:8000/api/set-performed -> Performed the task
+
 
 

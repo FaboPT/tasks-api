@@ -26,12 +26,6 @@ class TaskService
         return $this->taskRepository->store($data);
     }
 
-    public function edit(int $id): Task
-    {
-        return $this->taskRepository->edit($id);
-    }
-
-
     public function update(int $id,array $data): bool
     {
         return $this->taskRepository->update($id,$data);
