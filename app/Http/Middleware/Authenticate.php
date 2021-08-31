@@ -18,4 +18,18 @@ class Authenticate extends Middleware
             return route('login');
         }
     }
+
+    public function handle($request, \Closure $next, ...$guards)
+    {
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->guest()) {
+                return response()->json(["message"=>"Unauthorized."],401);
+            }
+        }
+
+
+        return $next($request);
+    }
 }
