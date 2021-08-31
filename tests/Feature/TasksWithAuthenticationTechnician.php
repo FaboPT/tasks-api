@@ -8,51 +8,51 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\ArrayShape;
 use Tests\TestCase;
 
 class TasksWithAuthenticationTechnician extends TestCase
 {
-    private function user_technician()
+
+    private function user_technician(): User
     {
         $user = User::firstOrNew(['email'=>'test-technician@email.com']);
         $user->name = 'Test Technician';
-        $user->password = 'secret12345?';
+        $user->password = bcrypt('secret12345?');
         $user->save();
         $user->assignRole('Technician');
         return $user;
 
     }
 
+    #[ArrayShape(['Authorization' => "string"])] private function headers():array{
+        return ['Authorization' => 'Bearer '.$this->user_technician()->createToken('test token technician')->plainTextToken];
+
+    }
+
     public function test_access_tasks_with_authentication_technician()
     {
-        $this->actingAs($this->user_technician());
-        $response = $this->get(route('task.index'));
+        $this->actingAs($this->user_technician(),'api');
+        $response = $this->json('get',route('task.index'),[],$this->headers());
 
-        $response->assertViewIs('tasks.index')->assertSuccessful();
+        $response->assertJsonFragment(["success"=>true])->assertSuccessful();
+
+        $this->user_technician()->tokens()->delete();
     }
 
     public function test_store_tasks_with_authentication_technician()
     {
-        $this->actingAs($this->user_technician());
+        $this->actingAs($this->user_technician(),'api');
         $data = [
-            'name'=>'Task test',
-            'user_id'=>Auth::user()->getAuthIdentifier()
+            'summary'=>'Task test',
         ];
 
 
-        $response = $this->post(route('task.store'),$data);
+        $response = $this->post(route('task.store'),$data,$this->headers());
 
-        $response->assertRedirect(route('task.index'))->assertStatus(302);
-    }
+        $response->assertJsonFragment(["success"=>true])->assertCreated();
 
-    public function test_edit_tasks_with_authentication_technician()
-    {
-        $this->actingAs($this->user_technician());
-        $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
-        $response = $this->get(route('task.edit',$task->id));
-
-
-        $response->assertViewIs('tasks.edit')->assertSuccessful();
+        $this->user_technician()->tokens()->delete();
     }
 
     public function test_update_tasks_with_authentication_technician()
@@ -60,32 +60,32 @@ class TasksWithAuthenticationTechnician extends TestCase
         $this->actingAs($this->user_technician());
         $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
         $data = [
-            'name'=>'Task test 2',
+            'summary'=>'Task test 2',
         ];
-        $response = $this->put(route('task.update', $task->id),$data);
+        $response = $this->put(route('task.update', $task->id),$data,$this->headers());
 
-        $response->assertRedirect(route('task.index'))->assertStatus(302);
+        $response->assertJsonFragment(["success"=>true])->assertSuccessful();
+
+        $this->user_technician()->tokens()->delete();
     }
 
-    public function test_set_status_tasks_with_authentication_technician()
+    public function test_set_performed_tasks_with_authentication_technician()
     {
         $this->actingAs($this->user_technician());
         $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
-        $data = [
-            'status'=>$task->status === 0 ? 1 : 0,
-            'performed_at'=>$task->performed_at ? null : Carbon::now(),
-        ];
-        $response = $this->put(route('task.setStatus', $task),$data);
+        $response = $this->put(route('task.set_performed', $task),[],$this->headers());
 
-        $response->assertSuccessful();
+        $response->assertJsonFragment(["success"=>true])->assertSuccessful();
     }
     public function test_destroy_tasks_with_authentication_technician()
     {
         $this->actingAs($this->user_technician());
         $task = Task::MyTasks(Auth::user()->getAuthIdentifier())->first();
 
-        $response = $this->delete(route('task.destroy', $task->id));
+        $response = $this->delete(route('task.destroy', $task->id),[],$this->headers());
 
-        $response->assertStatus(403);
+        $response->assertJsonFragment(["success"=>false])->assertForbidden();
+        $this->user_technician()->tokens()->delete();
+
     }
 }
