@@ -29,12 +29,13 @@ class TaskRepository extends BaseRepository
         return $this->task->create($attributes);
     }
 
-    public function update(int $id, array $attributes): bool
+    public function update(int $id, array $attributes): Model | bool
     {
         $task = $this->task->findOrFail($id);
 
         if($task->where('user_id',Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user()->hasRole('Technician'))) {
-            return $task->update($attributes);
+            $task->update($attributes);
+            return $task;
         }
         return false;
     }
@@ -49,7 +50,7 @@ class TaskRepository extends BaseRepository
         return false;
     }
 
-    public function setPerformed(int $id): bool {
+    public function setPerformed(int $id): Model| bool {
         $task = $this->task->findOrfail($id);
         $attributes = [
             'status'=>$task->status === 0 ? 1 : 0,

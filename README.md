@@ -71,7 +71,7 @@ docker-compose exec app php artisan migrate --seed
 - **POST** http://localhost:8000/api/tasks -> Create a new task
 - **PUT** http://localhost:8000/api/tasks/{id} -> Update task
 - **DELETE** http://localhost:8000/api/tasks/{id} -> Delete task
-- **PUT** http://localhost:8000/api/set-performed -> Performed the task
+- **PUT** http://localhost:8000/api/set-performed/{id} -> Performed the task
 
 
 

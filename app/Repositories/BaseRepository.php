@@ -18,7 +18,7 @@ abstract class BaseRepository
 
     abstract public function store(array $attributes): Model;
 
-    abstract public function update(int $id, array $attributes): bool;
+    abstract public function update(int $id, array $attributes): Model | bool;
 
     abstract public function destroy(int $id): bool;
 }

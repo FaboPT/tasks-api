@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TaskPerformed;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Models\Task;
+use App\Models\User;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use \App\Notifications\TaskPerformed;
+use Illuminate\Support\Facades\Notification;
+use Ramsey\Collection\Collection;
 
 class TaskController extends Controller
 {
@@ -46,7 +50,6 @@ class TaskController extends Controller
             $task = $this->task_service->store($request->all());
             if ($task) {
                 DB::commit();
-                TaskPerformed::dispatch($task);
                 return response()->json(['message' => 'Task successfully created', 'success' => true], 201);
             }
             Throw new \Exception("Not possible store a task",400);
@@ -123,7 +126,10 @@ class TaskController extends Controller
         DB::beginTransaction();
         try {
             $task = $this->task_service->setPerformed($id);
-            if($task){
+            if($task instanceof Task){
+                if(Auth::user()->hasRole('Technician'))
+                    Notification::send($this->getManagers(),new TaskPerformed($task));
+
                 DB::commit();
                 return response()->json(['message' => 'Task successfully performed', 'success' => true]);
             }
@@ -136,5 +142,11 @@ class TaskController extends Controller
                 'success' => false,
             ], empty($e->getCode()) ? 400 : $e->getCode());
         }
+    }
+
+    private function getManagers():\Illuminate\Support\Collection {
+       return User::WhereHas('roles', function($query) {
+            $query->where('name','Manager');
+        })->get();
     }
 }

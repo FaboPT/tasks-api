@@ -25,11 +25,19 @@ class LoginController extends Controller
                 'success' => false
             ]);
         }
+        $notifications = [];
+        if($user->hasRole('Manager'))
+        {
+            $notifications = $user->unreadNotifications;
+        }
+
+
 
         return response()->json([
             'access_token'=>$user->createToken($request->email)->plainTextToken,
             'token_type' => 'Bearer',
-            'success' => true
+            'success' => true,
+            'notifications' => $notifications,
         ]);
     }
 }

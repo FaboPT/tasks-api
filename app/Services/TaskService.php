@@ -36,7 +36,7 @@ class TaskService
         return $this->taskRepository->destroy($id);
     }
 
-    public function setPerformed(int $id): bool{
+    public function setPerformed(int $id): Model | bool{
         return $this->taskRepository->setPerformed($id);
     }
 }
