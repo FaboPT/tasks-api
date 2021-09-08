@@ -19,22 +19,20 @@ class LoginController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'message' => 'The provided credentials are incorrect.',
                 'success' => false
             ]);
         }
         $notifications = [];
-        if($user->hasRole('Manager'))
-        {
+        if ($user->hasRole('Manager')) {
             $notifications = $user->unreadNotifications;
         }
 
 
-
         return response()->json([
-            'access_token'=>$user->createToken($request->email)->plainTextToken,
+            'access_token' => $user->createToken($request->email)->plainTextToken,
             'token_type' => 'Bearer',
             'success' => true,
             'notifications' => $notifications,

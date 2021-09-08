@@ -6,11 +6,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
 {
-    public static $wrap = 'tasks';
+
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
@@ -27,7 +27,7 @@ class TaskResource extends JsonResource
                 "name" => $this->user->name,
                 "email" => $this->user->email,
                 "roles" => [
-                    'name'=>$this->user->roles->implode("name",' '),
+                    'name' => $this->user->roles->implode("name", ' '),
                 ],
             ]
         ];

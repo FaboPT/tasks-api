@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
+use App\Http\Resources\MessageTaskResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
@@ -44,22 +45,8 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $request->merge(['user_id' => Auth::user()->getAuthIdentifier()]);
-            $task = $this->task_service->store($request->all());
-            if ($task) {
-                DB::commit();
-                return response()->json(['message' => 'Task successfully created', 'success' => true], 201);
-            }
-            Throw new \Exception("Not possible store a task",400);
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => $e->getMessage(),
-                'success' => false,
-            ], empty($e->getCode()) ? 400 : $e->getCode());
-        }
+        $request->merge(['user_id' => Auth::user()->getAuthIdentifier()]);
+        return $this->task_service->store($request->all());
     }
 
     /**
@@ -73,12 +60,12 @@ class TaskController extends Controller
     {
         DB::beginTransaction();
         try {
-            $task = $this->task_service->update($id,$request->all());
-            if($task){
+            $task = $this->task_service->update($id, $request->all());
+            if ($task) {
                 DB::commit();
                 return response()->json(['message' => 'Task successfully updated', 'success' => true]);
             }
-            Throw new \Exception("Access Denied",403);
+            throw new \Exception("Access Denied", 403);
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -100,11 +87,11 @@ class TaskController extends Controller
         DB::beginTransaction();
         try {
             $task = $this->task_service->destroy($id);
-            if($task){
+            if ($task) {
                 DB::commit();
                 return response()->json(['message' => 'Task successfully deleted', 'success' => true]);
             }
-            Throw new \Exception("Access Denied",403);
+            throw new \Exception("Access Denied", 403);
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -125,15 +112,15 @@ class TaskController extends Controller
     {
         DB::beginTransaction();
         try {
-            $task = $this->task_service->setPerformed($id);
-            if($task instanceof Task){
-                if(Auth::user()->hasRole('Technician'))
-                    Notification::send($this->getManagers(),new TaskPerformed($task));
+            $task = $this->task_service->set_performed($id);
+            if ($task instanceof Task) {
+                if (Auth::user()->hasRole('Technician'))
+                    Notification::send($this->get_managers(), new TaskPerformed($task));
 
                 DB::commit();
                 return response()->json(['message' => 'Task successfully performed', 'success' => true]);
             }
-            Throw new \Exception("Access Denied",403);
+            throw new \Exception("Access Denied", 403);
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -144,9 +131,10 @@ class TaskController extends Controller
         }
     }
 
-    private function getManagers():\Illuminate\Support\Collection {
-       return User::WhereHas('roles', function($query) {
-            $query->where('name','Manager');
+    private function get_managers(): \Illuminate\Support\Collection
+    {
+        return User::WhereHas('roles', function ($query) {
+            $query->where('name', 'Manager');
         })->get();
     }
 }

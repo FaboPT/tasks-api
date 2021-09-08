@@ -24,7 +24,7 @@ class TaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'summary'=>'bail|required|string|min:3|max:2500'
+            'summary' => 'bail|required|string|min:3|max:2500'
         ];
     }
 }

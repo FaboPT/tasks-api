@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class TaskRepository extends BaseRepository
 {
     protected $task;
+
     public function __construct(Task $task)
     {
         $this->task = $task;
@@ -18,9 +19,10 @@ class TaskRepository extends BaseRepository
     }
 
 
-    public function all(): Collection{
+    public function all(): Collection
+    {
         return Auth::user()->hasRole('Technician') ?
-        $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name') :
+            $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name') :
             $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
     }
 
@@ -29,11 +31,11 @@ class TaskRepository extends BaseRepository
         return $this->task->create($attributes);
     }
 
-    public function update(int $id, array $attributes): Model | bool
+    public function update(int $id, array $attributes): Model|bool
     {
         $task = $this->task->findOrFail($id);
 
-        if($task->where('user_id',Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user()->hasRole('Technician'))) {
+        if ($task->where('user_id', Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user()->hasRole('Technician'))) {
             $task->update($attributes);
             return $task;
         }
@@ -44,18 +46,19 @@ class TaskRepository extends BaseRepository
     {
         $task = $this->task->findOrFail($id);
 
-        if( (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier())  || (Auth::user()->hasRole('Manager') &&  $task->user->hasRole('Technician'))) {
+        if ((Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user->hasRole('Technician'))) {
             return $task->delete();
         }
         return false;
     }
 
-    public function setPerformed(int $id): Model| bool {
+    public function set_performed(int $id): Model|bool
+    {
         $task = $this->task->findOrfail($id);
         $attributes = [
-            'status'=>$task->status === 0 ? 1 : 0,
+            'status' => $task->status === 0 ? 1 : 0,
             'performed_at' => $task->performed_at ? null : Carbon::now(),
         ];
-        return $this->update($id,$attributes);
+        return $this->update($id, $attributes);
     }
 }

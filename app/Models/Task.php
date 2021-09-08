@@ -21,18 +21,20 @@ class Task extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**
      * SCOPES
      */
 
-    public function scopeMyTasks($query, $userId){
-        return $query->where('user_id',$userId);
+    public function scopeMyTasks($query, $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 
-    public function scopeMyTasksManagerWithTechnicianTasks($query,$userid){
-        return $query->where('user_id',$userid)->orWhereIn('user_id',\App\Models\User::role('Technician')->pluck('id')->toArray());
+    public function scopeMyTasksManagerWithTechnicianTasks($query, $userid)
+    {
+        return $query->where('user_id', $userid)->orWhereIn('user_id', User::role('Technician')->pluck('id')->toArray());
     }
 }
