@@ -7,13 +7,12 @@ use App\Http\Resources\MessageTaskResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\TaskPerformed;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use \App\Notifications\TaskPerformed;
 use Illuminate\Support\Facades\Notification;
-use Ramsey\Collection\Collection;
 
 class TaskController extends Controller
 {
