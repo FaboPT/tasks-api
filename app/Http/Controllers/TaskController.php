@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
-use App\Http\Resources\MessageTaskResource;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -62,22 +60,8 @@ class TaskController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $task = $this->task_service->destroy($id);
-            if ($task) {
-                DB::commit();
-                return response()->json(['message' => 'Task successfully deleted', 'success' => true]);
-            }
-            throw new \Exception("Access Denied", 403);
 
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => $e->getMessage(),
-                'success' => false,
-            ], empty($e->getCode()) ? 400 : $e->getCode());
-        }
+        return $this->task_service->destroy($id);
     }
 
     /**

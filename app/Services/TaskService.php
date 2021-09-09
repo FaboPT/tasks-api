@@ -20,17 +20,30 @@ class TaskService
 
     protected TaskRepository $task_repository;
 
+    /**
+     * Construct
+     * @param TaskRepository $task_repository
+     */
     public function __construct(TaskRepository $task_repository)
     {
         $this->task_repository = $task_repository;
     }
 
+    /**
+     * Service get all tasks
+     * @return JsonResponse
+     */
     public function all(): JsonResponse
     {
         $tasks = TaskResource::collection($this->task_repository->all());
         return $this->success(null, 200, $tasks);
     }
 
+    /**
+     * Service store new task
+     * @param array $data
+     * @return JsonResponse
+     */
     public function store(array $data): JsonResponse
     {
         DB::beginTransaction();
@@ -48,7 +61,7 @@ class TaskService
 
     }
 
-    /** Service update Task
+    /** Service update task
      * @param int $id
      * @param array $data
      * @return JsonResponse
@@ -57,12 +70,9 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-            $task = $this->task_repository->update($id, $data);
-            if ($task) {
-                DB::commit();
-                return $this->success('Task successfully updated');
-            }
-            throw new \Exception("Access Denied", 403);
+            $this->task_repository->update($id, $data);
+            DB::commit();
+            return $this->success('Task successfully updated');
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -73,6 +83,7 @@ class TaskService
     }
 
     /**
+     * Service delete task
      * @param int $id
      * @return JsonResponse
      */
@@ -80,12 +91,9 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-            $task = $this->task_repository->destroy($id);
-            if ($task) {
-                DB::commit();
-                return $this->success('Task successfully deleted');
-            }
-            throw new \Exception("Access Denied", 403);
+            $this->task_repository->destroy($id);
+            DB::commit();
+            return $this->success('Task successfully deleted');
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -93,7 +101,13 @@ class TaskService
         }
     }
 
-    public function set_performed(int $id): JsonResponse
+    /**
+     * Service performed the task
+     * @param int $id
+     * @return JsonResponse
+     */
+    public
+    function set_performed(int $id): JsonResponse
     {
         DB::beginTransaction();
         try {
@@ -112,7 +126,12 @@ class TaskService
         }
     }
 
-    private function get_managers(): Collection
+    /**
+     * Private method used to return all managers
+     * @return Collection
+     */
+    private
+    function get_managers(): Collection
     {
         return User::WhereHas('roles', function ($query) {
             $query->where('name', 'Manager');

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskRepository extends BaseRepository
 {
-    protected $task;
+    protected Task $task;
 
     public function __construct(Task $task)
     {
@@ -31,25 +31,19 @@ class TaskRepository extends BaseRepository
         return $this->task->create($attributes);
     }
 
-    public function update(int $id, array $attributes): Model|bool
+    public function update(int $id, array $attributes): bool
     {
         $task = $this->task->findOrFail($id);
-
-        if ($task->where('user_id', Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user()->hasRole('Technician'))) {
-            $task->update($attributes);
-            return $task;
-        }
-        return false;
+        return $task->update($attributes);
     }
 
     public function destroy(int $id): bool
     {
         $task = $this->task->findOrFail($id);
 
-        if ((Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user->hasRole('Technician'))) {
-            return $task->delete();
-        }
-        return false;
+        return $task->delete();
+
+
     }
 
     public function set_performed(int $id): Model|bool
@@ -60,5 +54,11 @@ class TaskRepository extends BaseRepository
             'performed_at' => $task->performed_at ? null : Carbon::now(),
         ];
         return $this->update($id, $attributes);
+    }
+
+    private function have_permissions(Task $task): bool
+    {
+        return (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user->hasRole('Technician'));
+
     }
 }
