@@ -12,7 +12,7 @@
 
 ### Install dependencies
 
-#### MAC OS / Linux
+#### macOS / Linux
 
 ```
 docker run --rm -v $(pwd):/app composer install
