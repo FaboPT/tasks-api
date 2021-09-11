@@ -2,7 +2,8 @@
 
 ## Requirements
 
-- [docker](https://www.docker.com/products/docker-desktop)
+- [Docker](https://www.docker.com/products/docker-desktop)
+- [Postman](https://www.postman.com/downloads/)
 
 ## Info
 
