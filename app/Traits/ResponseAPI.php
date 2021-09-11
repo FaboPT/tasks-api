@@ -3,65 +3,38 @@
 namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ResponseAPI
 {
     /**
      * Core of response
      *
-     * @param int $statusCode
+     * @param int $status_code
      * @param string|null $message
-     * @param bool $isSuccess
-     * @param object|array|null $data
+     * @param bool $is_success
+     * @param object|null $data
+     * @param string $name_data
      * @return JsonResponse
      */
-    public function core_response(int $statusCode, string $message = null, bool $isSuccess = true, object|array $data = null): JsonResponse
+    public function core_response(int $status_code, string $message = null, bool $is_success = true, object $data = null, string $name_data = 'data'): JsonResponse
     {
-        if ($isSuccess) {
-            return response()->json($this->response_data($isSuccess, $data, $message), $statusCode);
-        } else {
-            return response()->json([
-                'message' => $message,
-                'success' => false,
-            ], $statusCode);
-        }
-    }
-
-    /**
-     * Send any success response
-     * @param string|null $message
-     * @param int $statusCode
-     * @param object|array|null $data
-     * @return JsonResponse
-     */
-    public function success(string $message = null, int $statusCode = 200, object|array $data = null): JsonResponse
-    {
-        return $this->core_response($statusCode, $message, true, $data);
-    }
-
-    /**
-     * Send any error response
-     * @param string $message
-     * @param int $statusCode
-     * @return JsonResponse
-     */
-    public function error(string $message, int $statusCode = 200): JsonResponse
-    {
-        return $this->core_response($statusCode, $message, false);
+        return response()->json($this->response_data($is_success, $name_data, $data, $message), $status_code);
     }
 
     /**
      * Method to generate the response data
-     * @param object|array $data
-     * @param string $message
      * @param bool $success
+     * @param object|null $data
+     * @param string|null $message
+     * @param string $name_data
      * @return array
      */
-    private function response_data(bool $success, object|array $data = null, string $message = null,): array
+    private function response_data(bool $success, string $name_data, object $data = null, string $message = null): array
     {
         if ($data) {
             return [
-                'data' => $data,
+                $name_data => $data,
                 'success' => $success
             ];
         }
@@ -70,5 +43,28 @@ trait ResponseAPI
             'success' => $success
         ];
     }
-}
 
+    /**
+     * Send any success response
+     * @param string|null $message
+     * @param int $status_code
+     * @param object|null $data
+     * @param string|null $name_data
+     * @return JsonResponse
+     */
+    public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = null): JsonResponse
+    {
+        return $this->core_response($status_code, $message, true, $data, $name_data);
+    }
+
+    /**
+     * Send any error response
+     * @param string $message
+     * @param int $status_code
+     * @return JsonResponse
+     */
+    public function error(string $message, int $status_code = Response::HTTP_BAD_REQUEST): JsonResponse
+    {
+        return $this->core_response($status_code, $message, false);
+    }
+}
