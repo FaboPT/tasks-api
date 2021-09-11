@@ -24,23 +24,23 @@ trait ResponseAPI
 
     /**
      * Method to generate the response data
-     * @param bool $success
+     * @param bool $is_success
      * @param object|null $data
      * @param string|null $message
      * @param string $name_data
      * @return array
      */
-    private function response_data(bool $success, string $name_data, object $data = null, string $message = null): array
+    private function response_data(bool $is_success, string $name_data, object $data = null, string $message = null): array
     {
         if ($data) {
             return [
                 $name_data => $data,
-                'success' => $success
+                'success' => $is_success
             ];
         }
         return [
             'message' => $message,
-            'success' => $success
+            'success' => $is_success
         ];
     }
 
