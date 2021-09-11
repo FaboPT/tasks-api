@@ -12,7 +12,7 @@ class TasksWithoutAuthentication extends TestCase
     {
         $response = $this->json('get', route('task.index'));
 
-        $response->assertJson(["message" => "Unauthorized."])->assertStatus(401);
+        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
     }
 
     public function test_store_tasks_without_authentication()
@@ -22,7 +22,7 @@ class TasksWithoutAuthentication extends TestCase
         ];
         $response = $this->post(route('task.store'), $data);
 
-        $response->assertJson(["message" => "Unauthorized."])->assertStatus(401);
+        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
     }
 
     public function test_update_tasks_without_authentication()
@@ -54,6 +54,6 @@ class TasksWithoutAuthentication extends TestCase
 
         $response = $this->delete(route('task.destroy', $task));
 
-        $response->assertJson(["message" => "Unauthorized."])->assertStatus(401);
+        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
     }
 }

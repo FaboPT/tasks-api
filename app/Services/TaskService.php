@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskService
 {
@@ -36,7 +37,7 @@ class TaskService
     public function all(): JsonResponse
     {
         $tasks = TaskResource::collection($this->task_repository->all());
-        return $this->success(null, 200, $tasks);
+        return $this->success(null, Response::HTTP_OK, $tasks);
     }
 
     /**
@@ -51,12 +52,12 @@ class TaskService
             $task = $this->task_repository->store($data);
             if ($task) {
                 DB::commit();
-                return $this->success('Task successfully created', 201);
+                return $this->success('Task successfully created', Response::HTTP_CREATED);
             }
-            throw new \Exception("Not possible store a task", 400);
+            throw new \Exception("Not possible store a task", Response::HTTP_NOT_FOUND);
         } catch (\Throwable $e) {
             DB::rollBack();
-            return $this->error($e->getMessage(), empty($e->getCode()) ? 400 : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
         }
 
     }
@@ -76,7 +77,7 @@ class TaskService
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            return $this->error($e->getMessage(), empty($e->getCode()) ? 400 : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
 
         }
 
@@ -97,7 +98,7 @@ class TaskService
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            return $this->error($e->getMessage(), empty($e->getCode()) ? 400 : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
         }
     }
 
@@ -118,11 +119,11 @@ class TaskService
                 DB::commit();
                 return $this->success('Task successfully performed');
             }
-            throw new \Exception("Access Denied", 403);
+            throw new \Exception("Access Denied", Response::HTTP_FORBIDDEN);
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            return $this->error($e->getMessage(), empty($e->getCode()) ? 400 : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
         }
     }
 
@@ -130,8 +131,7 @@ class TaskService
      * Private method used to return all managers
      * @return Collection
      */
-    private
-    function get_managers(): Collection
+    private function get_managers(): Collection
     {
         return User::WhereHas('roles', function ($query) {
             $query->where('name', 'Manager');
