@@ -8,12 +8,14 @@ use App\Models\User;
 use App\Notifications\TaskPerformed;
 use App\Repositories\TaskRepository;
 use App\Traits\ResponseAPI;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class TaskService
 {
@@ -49,11 +51,11 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-                $this->task_repository->store($data);
+            $this->task_repository->store($data);
             DB::commit();
-                return $this->success('Task successfully created', Response::HTTP_CREATED);
+            return $this->success('Task successfully created', Response::HTTP_CREATED);
 
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             report($e);
             return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
@@ -74,7 +76,7 @@ class TaskService
             DB::commit();
             return $this->success('Task successfully updated');
 
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             report($e);
             return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
@@ -96,7 +98,7 @@ class TaskService
             DB::commit();
             return $this->success('Task successfully deleted');
 
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             report($e);
             return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
@@ -120,9 +122,9 @@ class TaskService
                 DB::commit();
                 return $this->success('Task successfully performed');
             }
-            throw new \Exception("Access Denied", Response::HTTP_FORBIDDEN);
+            throw new Exception("Access Denied", Response::HTTP_FORBIDDEN);
 
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             report($e);
             return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);

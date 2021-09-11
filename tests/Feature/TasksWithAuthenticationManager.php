@@ -10,6 +10,16 @@ use Tests\TestCase;
 
 class TasksWithAuthenticationManager extends TestCase
 {
+    public function test_get_all_tasks_with_authentication_manager()
+    {
+        $this->actingAs($this->user_manager(), 'api');
+        $response = $this->get(route('task.index'), $this->headers());
+
+        $response->assertJsonFragment(["success" => true])->assertSuccessful();
+
+        $this->user_manager()->tokens()->delete();
+    }
+
     private function user_manager()
     {
         $user = User::firstOrNew(['email' => 'test-manager@email.com']);
@@ -25,16 +35,6 @@ class TasksWithAuthenticationManager extends TestCase
     {
         return ['Authorization' => 'Bearer ' . $this->user_manager()->createToken('test token technician')->plainTextToken];
 
-    }
-
-    public function test_get_all_tasks_with_authentication_manager()
-    {
-        $this->actingAs($this->user_manager(), 'api');
-        $response = $this->get(route('task.index'), $this->headers());
-
-        $response->assertJsonFragment(["success" => true])->assertSuccessful();
-
-        $this->user_manager()->tokens()->delete();
     }
 
     public function test_store_tasks_with_authentication_manager()

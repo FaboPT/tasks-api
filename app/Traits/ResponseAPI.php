@@ -8,6 +8,19 @@ use Symfony\Component\HttpFoundation\Response;
 trait ResponseAPI
 {
     /**
+     * Send any success response
+     * @param string|null $message
+     * @param int $status_code
+     * @param object|null $data
+     * @param string|null $name_data
+     * @return JsonResponse
+     */
+    public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = null): JsonResponse
+    {
+        return $this->core_response($status_code, $message, true, $data, $name_data);
+    }
+
+    /**
      * Core of response
      *
      * @param int $status_code
@@ -42,19 +55,6 @@ trait ResponseAPI
             'message' => $message,
             'success' => $is_success
         ];
-    }
-
-    /**
-     * Send any success response
-     * @param string|null $message
-     * @param int $status_code
-     * @param object|null $data
-     * @param string|null $name_data
-     * @return JsonResponse
-     */
-    public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = null): JsonResponse
-    {
-        return $this->core_response($status_code, $message, true, $data, $name_data);
     }
 
     /**

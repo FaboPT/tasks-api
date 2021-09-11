@@ -11,6 +11,16 @@ use Tests\TestCase;
 class TasksWithAuthenticationTechnician extends TestCase
 {
 
+    public function test_get_all_tasks_with_authentication_technician()
+    {
+        $this->actingAs($this->user_technician(), 'api');
+        $response = $this->json('get', route('task.index'), [], $this->headers());
+
+        $response->assertJsonFragment(["success" => true])->assertSuccessful();
+
+        $this->user_technician()->tokens()->delete();
+    }
+
     private function user_technician(): User
     {
         $user = User::firstOrNew(['email' => 'test-technician@email.com']);
@@ -26,16 +36,6 @@ class TasksWithAuthenticationTechnician extends TestCase
     {
         return ['Authorization' => 'Bearer ' . $this->user_technician()->createToken('test token technician')->plainTextToken];
 
-    }
-
-    public function test_get_all_tasks_with_authentication_technician()
-    {
-        $this->actingAs($this->user_technician(), 'api');
-        $response = $this->json('get', route('task.index'), [], $this->headers());
-
-        $response->assertJsonFragment(["success" => true])->assertSuccessful();
-
-        $this->user_technician()->tokens()->delete();
     }
 
     public function test_store_tasks_with_authentication_technician()

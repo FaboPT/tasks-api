@@ -14,11 +14,11 @@ abstract class BaseRepository
         $this->obj = $obj;
     }
 
-    abstract protected function all(): Collection;
-
     abstract public function store(array $attributes): Model;
 
     abstract public function update(int $id, array $attributes): bool;
 
     abstract public function destroy(int $id): bool;
+
+    abstract protected function all(): Collection;
 }

@@ -31,12 +31,6 @@ class TaskRepository extends BaseRepository
         return $this->task->create($attributes);
     }
 
-    public function update(int $id, array $attributes): bool
-    {
-        $task = $this->task->findOrFail($id);
-        return $task->update($attributes);
-    }
-
     public function destroy(int $id): bool
     {
         $task = $this->task->findOrFail($id);
@@ -54,6 +48,12 @@ class TaskRepository extends BaseRepository
             'performed_at' => $task->performed_at ? null : Carbon::now(),
         ];
         return $this->update($id, $attributes);
+    }
+
+    public function update(int $id, array $attributes): bool
+    {
+        $task = $this->task->findOrFail($id);
+        return $task->update($attributes);
     }
 
     private function have_permissions(Task $task): bool
