@@ -56,7 +56,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
         }
 
     }
@@ -77,7 +77,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
 
         }
 
@@ -99,7 +99,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -125,7 +125,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
         }
     }
 
