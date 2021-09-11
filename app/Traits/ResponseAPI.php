@@ -15,7 +15,7 @@ trait ResponseAPI
      * @param string|null $name_data
      * @return JsonResponse
      */
-    public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = null): JsonResponse
+    public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = 'data'): JsonResponse
     {
         return $this->core_response($status_code, $message, true, $data, $name_data);
     }
