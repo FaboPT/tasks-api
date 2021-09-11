@@ -49,16 +49,14 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-            $task = $this->task_repository->store($data);
-            if ($task) {
-                DB::commit();
+                $this->task_repository->store($data);
+            DB::commit();
                 return $this->success('Task successfully created', Response::HTTP_CREATED);
-            }
-            throw new \Exception("Not possible store a task", Response::HTTP_NOT_FOUND);
+
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
         }
 
     }
@@ -79,7 +77,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
 
         }
 
@@ -101,7 +99,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
         }
     }
 
@@ -127,7 +125,7 @@ class TaskService
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
+            return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_BAD_REQUEST : $e->getCode());
         }
     }
 
