@@ -57,6 +57,7 @@ class TaskService
             throw new \Exception("Not possible store a task", Response::HTTP_NOT_FOUND);
         } catch (\Throwable $e) {
             DB::rollBack();
+            report($e);
             return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
         }
 
@@ -77,6 +78,7 @@ class TaskService
 
         } catch (\Throwable $e) {
             DB::rollBack();
+            report($e);
             return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
 
         }
@@ -98,6 +100,7 @@ class TaskService
 
         } catch (\Throwable $e) {
             DB::rollBack();
+            report($e);
             return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
         }
     }
@@ -123,6 +126,7 @@ class TaskService
 
         } catch (\Throwable $e) {
             DB::rollBack();
+            report($e);
             return $this->error($e->getMessage(), empty($e->getCode()) ? Response::HTTP_NOT_FOUND : $e->getCode());
         }
     }
