@@ -32,6 +32,12 @@ docker run --rm -v ${PWD}:/app composer install
 
 ### Copy all file .env.example to .env
 
+In terminal if you use macOS / Linux / Git Bash(Windows)
+
+```
+cp .env.example .env
+```
+
 Change database configurations in **.env**
 
 ```
