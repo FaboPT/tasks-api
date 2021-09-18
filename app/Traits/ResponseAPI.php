@@ -12,7 +12,7 @@ trait ResponseAPI
      * @param string|null $message
      * @param int $status_code
      * @param object|null $data
-     * @param string|null $name_data
+     * @param string $name_data
      * @return JsonResponse
      */
     public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = 'data'): JsonResponse
