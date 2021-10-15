@@ -2,10 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use JsonSerializable;
 
 class TaskResource extends JsonResource
 {
@@ -14,7 +12,7 @@ class TaskResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param Request $request
-     * @return array|Arrayable|JsonSerializable
+     * @return array
      */
     public function toArray($request)
     {
