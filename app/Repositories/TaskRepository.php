@@ -40,7 +40,7 @@ class TaskRepository extends BaseRepository
 
     }
 
-    public function set_performed(int $id): Model|bool
+    public function setPerformed(int $id): Model|bool
     {
         $task = $this->task->findOrfail($id);
         $attributes = [
@@ -56,7 +56,7 @@ class TaskRepository extends BaseRepository
         return $task->update($attributes);
     }
 
-    private function have_permissions(Task $task): bool
+    private function havePermissions(Task $task): bool
     {
         return (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user->hasRole('Technician'));
 

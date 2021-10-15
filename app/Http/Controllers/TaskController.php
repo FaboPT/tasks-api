@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    private TaskService $task_service;
+    private TaskService $taskService;
 
-    public function __construct(TaskService $task_service)
+    public function __construct(TaskService $taskService)
     {
-        $this->task_service = $task_service;
+        $this->taskService = $taskService;
     }
 
 
@@ -24,7 +24,7 @@ class TaskController extends Controller
      */
     public function index(): JsonResponse
     {
-        return $this->task_service->all();
+        return $this->taskService->all();
     }
 
 
@@ -37,7 +37,7 @@ class TaskController extends Controller
     public function store(TaskRequest $request): JsonResponse
     {
         $request->merge(['user_id' => Auth::user()->getAuthIdentifier()]);
-        return $this->task_service->store($request->all());
+        return $this->taskService->store($request->all());
     }
 
     /**
@@ -49,7 +49,7 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $id): JsonResponse
     {
-        return $this->task_service->update($id, $request->all());
+        return $this->taskService->update($id, $request->all());
     }
 
     /**
@@ -61,7 +61,7 @@ class TaskController extends Controller
     public function destroy(int $id): JsonResponse
     {
 
-        return $this->task_service->destroy($id);
+        return $this->taskService->destroy($id);
     }
 
     /**
@@ -70,9 +70,9 @@ class TaskController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function set_performed(int $id): JsonResponse
+    public function setPerformed(int $id): JsonResponse
     {
-        return $this->task_service->set_performed($id);
+        return $this->taskService->setPerformed($id);
     }
 
 }

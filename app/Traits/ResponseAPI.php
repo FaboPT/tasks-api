@@ -10,61 +10,61 @@ trait ResponseAPI
     /**
      * Send any success response
      * @param string|null $message
-     * @param int $status_code
+     * @param int $statusCode
      * @param object|null $data
-     * @param string $name_data
+     * @param string $nameData
      * @return JsonResponse
      */
-    public function success(string $message = null, int $status_code = Response::HTTP_OK, object $data = null, string $name_data = 'data'): JsonResponse
+    public function success(string $message = null, int $statusCode = Response::HTTP_OK, object $data = null, string $nameData = 'data'): JsonResponse
     {
-        return $this->core_response($status_code, $message, true, $data, $name_data);
+        return $this->coreResponse($statusCode, $message, true, $data, $nameData);
     }
 
     /**
      * Core of response
      *
-     * @param int $status_code
+     * @param int $statusCode
      * @param string|null $message
-     * @param bool $is_success
+     * @param bool $isSuccess
      * @param object|null $data
-     * @param string $name_data
+     * @param string $nameData
      * @return JsonResponse
      */
-    public function core_response(int $status_code, string $message = null, bool $is_success = true, object $data = null, string $name_data = 'data'): JsonResponse
+    public function coreResponse(int $statusCode, string $message = null, bool $isSuccess = true, object $data = null, string $nameData = 'data'): JsonResponse
     {
-        return response()->json($this->response_data($is_success, $name_data, $data, $message), $status_code);
+        return response()->json($this->responseData($isSuccess, $nameData, $data, $message), $statusCode);
     }
 
     /**
      * Method to generate the response data
-     * @param bool $is_success
+     * @param bool $isSuccess
      * @param object|null $data
      * @param string|null $message
-     * @param string $name_data
+     * @param string $nameData
      * @return array
      */
-    private function response_data(bool $is_success, string $name_data, object $data = null, string $message = null): array
+    private function responseData(bool $isSuccess, string $nameData, object $data = null, string $message = null): array
     {
         if ($data) {
             return [
-                $name_data => $data,
-                'success' => $is_success
+                $nameData => $data,
+                'success' => $isSuccess
             ];
         }
         return [
             'message' => $message,
-            'success' => $is_success
+            'success' => $isSuccess
         ];
     }
 
     /**
      * Send any error response
      * @param string $message
-     * @param int $status_code
+     * @param int $statusCode
      * @return JsonResponse
      */
-    public function error(string $message, int $status_code = Response::HTTP_BAD_REQUEST): JsonResponse
+    public function error(string $message, int $statusCode = Response::HTTP_BAD_REQUEST): JsonResponse
     {
-        return $this->core_response($status_code, $message, false);
+        return $this->coreResponse($statusCode, $message, false);
     }
 }

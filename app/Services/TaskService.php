@@ -21,15 +21,15 @@ class TaskService
 {
     use ResponseAPI;
 
-    protected TaskRepository $task_repository;
+    protected TaskRepository $taskRepository;
 
     /**
      * Construct
-     * @param TaskRepository $task_repository
+     * @param TaskRepository $taskRepository
      */
-    public function __construct(TaskRepository $task_repository)
+    public function __construct(TaskRepository $taskRepository)
     {
-        $this->task_repository = $task_repository;
+        $this->taskRepository = $taskRepository;
     }
 
     /**
@@ -38,7 +38,7 @@ class TaskService
      */
     public function all(): JsonResponse
     {
-        $tasks = TaskResource::collection($this->task_repository->all());
+        $tasks = TaskResource::collection($this->taskRepository->all());
         return $this->success(null, Response::HTTP_OK, $tasks, 'tasks');
     }
 
@@ -51,7 +51,7 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-            $this->task_repository->store($data);
+            $this->taskRepository->store($data);
             DB::commit();
             return $this->success('Task successfully created', Response::HTTP_CREATED);
 
@@ -72,7 +72,7 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-            $this->task_repository->update($id, $data);
+            $this->taskRepository->update($id, $data);
             DB::commit();
             return $this->success('Task successfully updated');
 
@@ -94,7 +94,7 @@ class TaskService
     {
         DB::beginTransaction();
         try {
-            $this->task_repository->destroy($id);
+            $this->taskRepository->destroy($id);
             DB::commit();
             return $this->success('Task successfully deleted');
 
@@ -110,15 +110,14 @@ class TaskService
      * @param int $id
      * @return JsonResponse
      */
-    public
-    function set_performed(int $id): JsonResponse
+    public function setPerformed(int $id): JsonResponse
     {
         DB::beginTransaction();
         try {
-            $task = $this->task_repository->set_performed($id);
+            $task = $this->taskRepository->setPerformed($id);
             if ($task instanceof Task) {
                 if (Auth::user()->hasRole('Technician'))
-                    Notification::send($this->get_managers(), new TaskPerformed($task));
+                    Notification::send($this->getManagers(), new TaskPerformed($task));
                 DB::commit();
                 return $this->success('Task successfully performed');
             }
@@ -135,7 +134,7 @@ class TaskService
      * Private method used to return all managers
      * @return Collection
      */
-    private function get_managers(): Collection
+    private function getManagers(): Collection
     {
         return User::WhereHas('roles', function ($query) {
             $query->where('name', 'Manager');
