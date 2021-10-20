@@ -95,5 +95,8 @@ docker-compose exec app php artisan migrate --seed
 - **DELETE** http://localhost:8000/api/tasks/{id} -> Delete task
 - **PUT** http://localhost:8000/api/set-performed/{id} -> Performed the task
 
+## Production
+
+[Production](https://prod-tasks-api.herokuapp.com/)
 
 
