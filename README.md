@@ -103,6 +103,19 @@ docker-compose exec app php artisan migrate --seed
 
 - user-manager@example.com | user-technician@example.com
 - Password for users -> **password**
+-
+
+#### Create a Token
+
+- **POST** - https://prod-tasks-api.herokuapp.com/api/login
+
+#### TASKS Endpoints
+
+- **GET** https://prod-tasks-api.herokuapp.com/api/tasks -> Get tasks
+- **POST** https://prod-tasks-api.herokuapp.com/api/tasks -> Create a new task
+- **PUT** https://prod-tasks-api.herokuapp.com/api/tasks/{id} -> Update task
+- **DELETE** https://prod-tasks-api.herokuapp.com/api/tasks/{id} -> Delete task
+- **PUT** https://prod-tasks-api.herokuapp.com/api/set-performed/{id} -> Performed the task
 
 
 
