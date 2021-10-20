@@ -97,6 +97,12 @@ docker-compose exec app php artisan migrate --seed
 
 ## Production
 
-[Production](https://prod-tasks-api.herokuapp.com/)
+### URL https://prod-tasks-api.herokuapp.com
+
+### Login
+
+- user-manager@example.com | user-technician@example.com
+- Password for users -> **password**
+
 
 
