@@ -47,10 +47,11 @@ class TaskRepository extends BaseRepository
         return $this->update($id, $attributes);
     }
 
-    public function update(int $id, array $attributes): bool
+    public function update(int $id, array $attributes): Model|bool
     {
         $task = $this->task->findOrFail($id);
-        return $task->update($attributes);
+        $task->update($attributes);
+        return $task;
     }
 
     private function isTechnician(): bool
