@@ -60,7 +60,7 @@ class TaskRepository extends BaseRepository
 
     private function getTasksTechnician(): Collection
     {
-        return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name');
+        return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get();
     }
 
     private function getTasksManager(): Collection
