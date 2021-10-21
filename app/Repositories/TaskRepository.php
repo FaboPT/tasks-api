@@ -21,9 +21,7 @@ class TaskRepository extends BaseRepository
 
     public function all(): Collection
     {
-        return Auth::user()->hasRole('Technician') ?
-            $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name') :
-            $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
+        return $this->isTechnician() ? $this->tasksTechnician() : $this->tasksManager();
     }
 
     public function store(array $attributes): Model
@@ -36,7 +34,6 @@ class TaskRepository extends BaseRepository
         $task = $this->task->findOrFail($id);
 
         return $task->delete();
-
 
     }
 
@@ -56,9 +53,25 @@ class TaskRepository extends BaseRepository
         return $task->update($attributes);
     }
 
+    private function isTechnician(): bool
+    {
+        return Auth::user()->hasRole('Technician');
+    }
+
+    private function tasksTechnician(): Collection
+    {
+        return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name');
+    }
+
+    private function tasksManager(): Collection
+    {
+        return $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
+    }
+
     private function havePermissions(Task $task): bool
     {
         return (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user->hasRole('Technician'));
 
     }
+
 }
