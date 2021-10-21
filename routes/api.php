@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->prefix('tasks')->group(function () {
     Route::post('', [TaskController::class, 'store'])->name('task.store');
     Route::put('/{id}', [TaskController::class, 'update'])->name('task.update')->middleware('permission.edit');
     Route::delete('/{id}', [TaskController::class, 'destroy'])->name('task.destroy')->middleware('permission.delete');
-    Route::put('/set-performed/{id}', [TaskController::class, 'set_performed'])->name('task.set_performed');
+    Route::put('/set-performed/{id}', [TaskController::class, 'setPerformed'])->name('task.set_performed');
 
 });
 
