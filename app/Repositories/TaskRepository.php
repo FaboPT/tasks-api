@@ -21,7 +21,7 @@ class TaskRepository extends BaseRepository
 
     public function all(): Collection
     {
-        return $this->isTechnician() ? $this->tasksTechnician() : $this->tasksManager();
+        return $this->isTechnician() ? $this->getTasksTechnician() : $this->getTasksManager();
     }
 
     public function store(array $attributes): Model
@@ -58,12 +58,12 @@ class TaskRepository extends BaseRepository
         return Auth::user()->hasRole('Technician');
     }
 
-    private function tasksTechnician(): Collection
+    private function getTasksTechnician(): Collection
     {
         return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get('user.name');
     }
 
-    private function tasksManager(): Collection
+    private function getTasksManager(): Collection
     {
         return $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
     }
