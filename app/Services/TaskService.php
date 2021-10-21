@@ -115,13 +115,9 @@ class TaskService
         DB::beginTransaction();
         try {
             $task = $this->taskRepository->setPerformed($id);
-            if ($task instanceof Task) {
-                if (Auth::user()->hasRole('Technician'))
-                    Notification::send($this->getManagers(), new TaskPerformed($task));
-                DB::commit();
-                return $this->success('Task successfully performed');
-            }
-            throw new Exception("Access Denied", Response::HTTP_FORBIDDEN);
+            $this->sendNotification($task);
+            DB::commit();
+            return $this->success('Task successfully performed');
 
         } catch (Throwable $e) {
             DB::rollBack();
@@ -139,5 +135,26 @@ class TaskService
         return User::WhereHas('roles', function ($query) {
             $query->where('name', 'Manager');
         })->get();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function sendNotification($task): void
+    {
+        $this->instanceOfTask($task) ?
+            $this->createNotificationWhenTechnicianUser($task) :
+            throw new Exception("Access Denied", Response::HTTP_UNAUTHORIZED);
+    }
+
+    private function instanceOfTask($task): bool
+    {
+        return $task instanceof Task;
+    }
+
+    private function createNotificationWhenTechnicianUser($task): void
+    {
+        if (Auth::user()->hasRole('Technician'))
+            Notification::send($this->getManagers(), new TaskPerformed($task));
     }
 }
