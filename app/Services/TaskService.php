@@ -117,7 +117,7 @@ class TaskService
             $task = $this->taskRepository->setPerformed($id);
             $this->sendNotification($task);
             DB::commit();
-            return $this->success('Task successfully performed');
+            return $this->success($this->messagePerformed($task));
 
         } catch (Throwable $e) {
             DB::rollBack();
@@ -156,5 +156,10 @@ class TaskService
     {
         if (Auth::user()->hasRole('Technician'))
             Notification::send($this->getManagers(), new TaskPerformed($task));
+    }
+
+    private function messagePerformed($task): string
+    {
+        return $task->status === 1 ? 'Task successfully performed' : 'Task successfully not performed';
     }
 }
