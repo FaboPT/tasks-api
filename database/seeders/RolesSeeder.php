@@ -17,13 +17,13 @@ class RolesSeeder extends Seeder
         DB::table('roles')->insert([
             [
                 'name' => 'Manager',
-                'guard_name' => 'web',
+                'guard_name' => 'api',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Technician',
-                'guard_name' => 'web',
+                'guard_name' => 'api',
                 'created_at' => now(),
                 'updated_at' => now(),
 
