@@ -103,7 +103,6 @@ docker-compose exec app php artisan migrate --seed
 
 - user-manager@example.com | user-technician@example.com
 - Password for users -> **password**
--
 
 #### Create a Token
 
