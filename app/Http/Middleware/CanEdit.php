@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Traits\ResponseAPI;
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CanEdit
 {
@@ -26,7 +27,7 @@ class CanEdit
             return $next($request);
 
         }
-        return $this->error('Access Denied', 403);
+        return $this->error('Access Denied', Response::HTTP_FORBIDDEN);
 
     }
 }
