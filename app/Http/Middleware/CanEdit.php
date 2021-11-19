@@ -23,11 +23,16 @@ class CanEdit
     {
         $task = Task::find($request->id);
 
-        if ($task->user_id === $request->user()->getAuthIdentifier() || ($request->user()->hasRole('Manager') && $task->user->hasRole('Technician'))) {
+        if ($this->isEditable($request,$task)) {
             return $next($request);
 
         }
         return $this->error('Access Denied', Response::HTTP_FORBIDDEN);
 
+    }
+
+    private function isEditable(Request $request, Task $task): bool
+    {
+        return $task->user_id === $request->user()->getAuthIdentifier() || ($request->user()->hasRole('Manager') && $task->user->hasRole('Technician'));
     }
 }
