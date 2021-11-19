@@ -22,7 +22,7 @@ class CanDelete
     public function handle(Request $request, Closure $next)
     {
         if ($request->user()->hasRole('Technician')) {
-            return $this->error('Access Denied', 403);
+            return $this->error('Access Denied', Response::HTTP_FORBIDDEN);
         }
         $task = Task::find($request->id);
 
