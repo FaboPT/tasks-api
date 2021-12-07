@@ -1,13 +1,13 @@
 version: "3.9"
 networks:
-    laravel:
+    tasks-api:
 
 services:
     nginx:
         image: nginx:stable
         container_name: nginx_tasks
         ports:
-            - 8000:80
+            - "8000:80"
         deploy:
             resources:
                 limits:
@@ -23,7 +23,7 @@ services:
             - app
             - mysql
         networks:
-            - laravel
+            - tasks-api
     mysql:
         image: mysql:8
         container_name: mysql_tasks
@@ -37,7 +37,9 @@ services:
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         networks:
-            - laravel
+            - tasks-api
+        volumes:
+            - mysql_data:/var/lib/mysql
     app:
         build:
             context: ./
@@ -56,4 +58,6 @@ services:
                     cpus: "2"
                     memory: 2048M
         networks:
-            - laravel
+            - tasks-api
+volumes:
+    mysql_data:
