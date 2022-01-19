@@ -15,7 +15,6 @@ class TaskRepository extends BaseRepository
     public function __construct(Task $task)
     {
         $this->task = $task;
-        parent::__construct($this->task);
     }
 
 
