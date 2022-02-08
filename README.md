@@ -7,7 +7,7 @@
 
 ## Info
 
-- [Laravel 8 Info](https://laravel.com/docs/8.x/installation)
+- [Laravel 9 Info](https://laravel.com/docs/9.x/installation)
 
 ## Installation/Configuration
 
