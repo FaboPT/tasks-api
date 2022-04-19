@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository
 {
@@ -13,5 +13,5 @@ abstract class BaseRepository
 
     abstract public function destroy(int $id): bool;
 
-    abstract protected function all(): Collection;
+    abstract protected function all(): LengthAwarePaginator;
 }

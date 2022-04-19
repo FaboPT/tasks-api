@@ -38,8 +38,7 @@ class TaskService
      */
     public function all(): JsonResponse
     {
-        $tasks = TaskResource::collection($this->taskRepository->all());
-        return $this->success(null, Response::HTTP_OK, $tasks, 'tasks');
+        return $this->success(null, Response::HTTP_OK, TaskResource::collection($this->taskRepository->all())->resource, 'tasks');
     }
 
     /**

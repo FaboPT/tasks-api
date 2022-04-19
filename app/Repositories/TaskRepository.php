@@ -4,8 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Task;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class TaskRepository extends BaseRepository
@@ -18,7 +18,7 @@ class TaskRepository extends BaseRepository
     }
 
 
-    public function all(): Collection
+    public function all(): LengthAwarePaginator
     {
         return $this->isTechnician() ? $this->getTasksTechnician() : $this->getTasksManager();
     }
@@ -30,9 +30,7 @@ class TaskRepository extends BaseRepository
 
     public function destroy(int $id): bool
     {
-        $task = $this->task->findOrFail($id);
-
-        return $task->delete();
+        return $this->task->findOrFail($id)->delete();
 
     }
 
@@ -58,14 +56,14 @@ class TaskRepository extends BaseRepository
         return Auth::user()->hasRole('Technician');
     }
 
-    private function getTasksTechnician(): Collection
+    private function getTasksTechnician(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->get();
+        return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->paginate();
     }
 
-    private function getTasksManager(): Collection
+    private function getTasksManager(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->get();
+        return $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->paginate()->get();
     }
 
     private function havePermissions(Task $task): bool
