@@ -78,6 +78,15 @@ docker-compose exec app php artisan migrate --seed
 
 ### URL http://localhost:8000
 
+### Configure Access Local Database
+
+```
+Host: 127.0.0.1
+Port: 3307
+Username : root
+Password: yourdatabasepassword
+```
+
 ### Login
 
 - Go your database and seed the fake users created and choose one
