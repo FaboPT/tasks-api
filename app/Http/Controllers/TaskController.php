@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,9 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return TaskResource
      */
-    public function index(): JsonResponse
+    public function index(): TaskResource
     {
         return $this->taskService->all();
     }

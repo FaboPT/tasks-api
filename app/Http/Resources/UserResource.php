@@ -2,22 +2,26 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Support\JsonStandardResource;
 use App\Models\User;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use JsonSerializable;
 
 /**
  * @mixin User
  */
-class UserResource extends JsonResource
+class UserResource extends JsonStandardResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param Request $request
+     * @return array|Arrayable|JsonSerializable
      */
-    public function toArray($request)
+    public function toArray($request): array|JsonSerializable|Arrayable
     {
+
         return [
             'name' => $this->name,
             'email' => $this->email,

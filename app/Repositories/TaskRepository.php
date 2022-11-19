@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Task;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -48,27 +49,34 @@ class TaskRepository extends BaseRepository
     {
         $task = $this->task->findOrFail($id);
         $task->update($attributes);
+
         return $task;
     }
 
-    private function isTechnician(): bool
+    private function isTechnician(User $user = null): bool
     {
-        return Auth::user()->hasRole('Technician');
+        return $user ? $user->hasRole('Technician') : Auth::user()?->hasRole('Technician');
+    }
+
+    private function isManager(): bool
+    {
+        return Auth::user()?->hasRole('Manager');
     }
 
     private function getTasksTechnician(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->myTasks(Auth::user()->getAuthIdentifier())->paginate();
+        return $this->task->with('user.roles')->myTasks(Auth::user()?->getAuthIdentifier())->paginate();
     }
 
     private function getTasksManager(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->MyTasksManagerWithTechnicianTasks(Auth::user()->getAuthIdentifier())->paginate()->get();
+//        dd($this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate()->toArray());
+        return $this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate();
     }
 
     private function havePermissions(Task $task): bool
     {
-        return (Auth::user()->hasRole('Manager') && $task->user_id === Auth::user()->getAuthIdentifier()) || (Auth::user()->hasRole('Manager') && $task->user->hasRole('Technician'));
+        return ($this->isManager() && $task->user_id === Auth::user()?->getAuthIdentifier()) || ($this->isManager() && $this->isTechnician($task->user));
 
     }
 

@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 class TaskService
 {
@@ -34,11 +33,11 @@ class TaskService
 
     /**
      * Service get all tasks
-     * @return JsonResponse
+     * @return TaskResource
      */
-    public function all(): JsonResponse
+    public function all(): TaskResource
     {
-        return $this->success(null, Response::HTTP_OK, TaskResource::collection($this->taskRepository->all())->resource, 'tasks');
+        return new TaskResource($this->taskRepository->all(), 'Tasks successfully received', 'tasks');
     }
 
     /**
@@ -48,18 +47,9 @@ class TaskService
      */
     public function store(array $data): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $this->taskRepository->store($data);
-            DB::commit();
-            return $this->success('Task successfully created', Response::HTTP_CREATED);
+        DB::transaction(fn() => $this->taskRepository->store($data));
 
-        } catch (Throwable $e) {
-            DB::rollBack();
-            report($e);
-            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
-        }
-
+        return $this->success('Task successfully created', Response::HTTP_CREATED);
     }
 
     /** Service update task
@@ -69,18 +59,9 @@ class TaskService
      */
     public function update(int $id, array $data): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $this->taskRepository->update($id, $data);
-            DB::commit();
-            return $this->success('Task successfully updated');
+        DB::transaction(fn() => $this->taskRepository->update($id, $data));
 
-        } catch (Throwable $e) {
-            DB::rollBack();
-            report($e);
-            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
-
-        }
+        return $this->success('Task successfully updated');
 
     }
 
@@ -91,17 +72,10 @@ class TaskService
      */
     public function destroy(int $id): JsonResponse
     {
-        DB::beginTransaction();
-        try {
-            $this->taskRepository->destroy($id);
-            DB::commit();
-            return $this->success('Task successfully deleted');
+        DB::transaction(fn() => $this->taskRepository->destroy($id));
 
-        } catch (Throwable $e) {
-            DB::rollBack();
-            report($e);
-            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
-        }
+        return $this->success('Task successfully deleted');
+
     }
 
     /**
@@ -111,18 +85,14 @@ class TaskService
      */
     public function setPerformed(int $id): JsonResponse
     {
-        DB::beginTransaction();
-        try {
+        $task = DB::transaction(function () use (&$id) {
             $task = $this->taskRepository->setPerformed($id);
             $this->sendNotification($task);
-            DB::commit();
-            return $this->success($this->messagePerformed($task));
 
-        } catch (Throwable $e) {
-            DB::rollBack();
-            report($e);
-            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
-        }
+            return $task;
+        });
+
+        return $this->success($this->messagePerformed($task));
     }
 
     /**
@@ -153,7 +123,7 @@ class TaskService
 
     private function createNotificationWhenTechnicianUser($task): void
     {
-        if (Auth::user()->hasRole('Technician'))
+        if (Auth::user()?->hasRole('Technician'))
             Notification::send($this->getManagers(), new TaskPerformed($task));
     }
 
