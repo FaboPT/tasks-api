@@ -47,9 +47,14 @@ class TaskService
      */
     public function store(array $data): JsonResponse
     {
-        DB::transaction(fn() => $this->taskRepository->store($data));
+        try {
+            DB::transaction(fn() => $this->taskRepository->store($data));
 
-        return $this->success('Task successfully created', Response::HTTP_CREATED);
+            return $this->success('Task successfully created', Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
+        }
+
     }
 
     /** Service update task
@@ -59,10 +64,13 @@ class TaskService
      */
     public function update(int $id, array $data): JsonResponse
     {
-        DB::transaction(fn() => $this->taskRepository->update($id, $data));
+        try {
+            DB::transaction(fn() => $this->taskRepository->update($id, $data));
 
-        return $this->success('Task successfully updated');
-
+            return $this->success('Task successfully updated');
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**
@@ -72,9 +80,14 @@ class TaskService
      */
     public function destroy(int $id): JsonResponse
     {
-        DB::transaction(fn() => $this->taskRepository->destroy($id));
+        try {
+            DB::transaction(fn() => $this->taskRepository->destroy($id));
 
-        return $this->success('Task successfully deleted');
+            return $this->success('Task successfully deleted');
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: Response::HTTP_BAD_REQUEST);
+        }
+
 
     }
 
