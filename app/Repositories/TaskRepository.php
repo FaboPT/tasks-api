@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\Task;
@@ -11,13 +13,9 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskRepository extends BaseRepository
 {
-    protected Task $task;
-
-    public function __construct(Task $task)
+    public function __construct(private readonly Task $task)
     {
-        $this->task = $task;
     }
-
 
     public function all(): LengthAwarePaginator
     {
@@ -31,7 +29,7 @@ class TaskRepository extends BaseRepository
 
     public function destroy(int $id): bool
     {
-        return $this->task->findOrFail($id)->delete();
+        return $this->findById($id)->delete();
 
     }
 
@@ -42,6 +40,7 @@ class TaskRepository extends BaseRepository
             'status' => $task->status === 0 ? 1 : 0,
             'performed_at' => $task->performed_at ? null : Carbon::now(),
         ];
+
         return $this->update($id, $attributes);
     }
 
@@ -53,14 +52,19 @@ class TaskRepository extends BaseRepository
         return $task;
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Task
+     */
+    public function findById(int $id): Task
+    {
+        return $this->task->findOrFail($id);
+    }
+
     private function isTechnician(User $user = null): bool
     {
         return $user ? $user->hasRole('Technician') : Auth::user()?->hasRole('Technician');
-    }
-
-    private function isManager(): bool
-    {
-        return Auth::user()?->hasRole('Manager');
     }
 
     private function getTasksTechnician(): LengthAwarePaginator
@@ -70,14 +74,18 @@ class TaskRepository extends BaseRepository
 
     private function getTasksManager(): LengthAwarePaginator
     {
-//        dd($this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate()->toArray());
+        //        dd($this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate()->toArray());
         return $this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate();
     }
 
-    private function havePermissions(Task $task): bool
-    {
-        return ($this->isManager() && $task->user_id === Auth::user()?->getAuthIdentifier()) || ($this->isManager() && $this->isTechnician($task->user));
+    /*private function isManager(): bool
+   {
+       return Auth::user()?->hasRole('Manager');
+   }*/
 
-    }
+    /* private function havePermissions(Task $task): bool
+     {
+         return ($this->isManager() && $task->user_id === Auth::user()?->getAuthIdentifier()) || ($this->isManager() && $this->isTechnician($task->user));
 
+     }*/
 }

@@ -25,7 +25,3 @@ Route::middleware('auth:sanctum')->prefix('tasks')->group(function () {
     Route::put('/set-performed/{id}', [TaskController::class, 'setPerformed'])->name('task.set_performed');
 
 });
-
-
-
-

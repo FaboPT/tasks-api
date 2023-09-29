@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
@@ -8,12 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 trait ResponseAPI
 {
     /**
-     * Send any success response
-     * @param string|null $message
-     * @param int $statusCode
-     * @param object|null $data
-     * @param string $nameData
-     * @return JsonResponse
+     * Send any success response.
      */
     public function success(string $message = null, int $statusCode = Response::HTTP_OK, object $data = null, string $nameData = 'data'): JsonResponse
     {
@@ -21,14 +18,7 @@ trait ResponseAPI
     }
 
     /**
-     * Core of response
-     *
-     * @param int $statusCode
-     * @param string|null $message
-     * @param bool $isSuccess
-     * @param object|null $data
-     * @param string $nameData
-     * @return JsonResponse
+     * Core of response.
      */
     public function coreResponse(int $statusCode, string $message = null, bool $isSuccess = true, object $data = null, string $nameData = 'data'): JsonResponse
     {
@@ -36,35 +26,28 @@ trait ResponseAPI
     }
 
     /**
-     * Method to generate the response data
-     * @param bool $isSuccess
-     * @param object|null $data
-     * @param string|null $message
-     * @param string $nameData
-     * @return array
+     * Send any error response.
+     */
+    public function error(string $message, int $statusCode = Response::HTTP_BAD_REQUEST): JsonResponse
+    {
+        return $this->coreResponse($statusCode, $message, false);
+    }
+
+    /**
+     * Method to generate the response data.
      */
     private function responseData(bool $isSuccess, string $nameData, object $data = null, string $message = null): array
     {
         if ($data) {
             return [
                 $nameData => $data,
-                'success' => $isSuccess
+                'success' => $isSuccess,
             ];
         }
+
         return [
             'message' => $message,
-            'success' => $isSuccess
+            'success' => $isSuccess,
         ];
-    }
-
-    /**
-     * Send any error response
-     * @param string $message
-     * @param int $statusCode
-     * @return JsonResponse
-     */
-    public function error(string $message, int $statusCode = Response::HTTP_BAD_REQUEST): JsonResponse
-    {
-        return $this->coreResponse($statusCode, $message, false);
     }
 }

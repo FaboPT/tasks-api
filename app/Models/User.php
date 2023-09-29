@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,11 +18,15 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
+     * @var string|string[]
+     */
+    protected string|array $guard_name = 'api';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $guard_name = 'api';
     protected $fillable = [
         'name',
         'email',
@@ -30,7 +36,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -40,16 +46,15 @@ class User extends Authenticatable
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
     /**
-     * RELATIONSHIPS
+     * RELATIONSHIPS.
      */
-
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'user_id', 'id');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -16,22 +18,22 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $user = User::where('email', $request->email)->first();
+        $email = $request->get('email');
+        $user = User::where('email', $email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->get('password'), $user->password)) {
             throw ValidationException::withMessages([
                 'message' => 'The provided credentials are incorrect.',
-                'success' => false
+                'success' => false,
             ]);
         }
         $notifications = [];
         if ($user->hasRole('Manager')) {
-            $notifications = $user->unreadNotifications;
+            $notifications = $user->unreadNotifications();
         }
 
-
         return response()->json([
-            'access_token' => $user->createToken($request->email)->plainTextToken,
+            'access_token' => $user->createToken($email)->plainTextToken,
             'token_type' => 'Bearer',
             'success' => true,
             'notifications' => $notifications,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
@@ -28,16 +30,12 @@ class TaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'summary' => 'bail|required|string|min:3|max:2500'
+            'summary' => 'bail|required|string|min:3|max:2500',
         ];
     }
 
     /**
      * Handle a failed validation attempt.
-     *
-     * @param Validator $validator
-     * @return void
-     *
      */
     protected function failedValidation(Validator $validator)
     {

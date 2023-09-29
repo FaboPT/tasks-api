@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Task;
@@ -15,8 +17,6 @@ class TaskPerformed extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(Task $task)
     {
@@ -27,6 +27,7 @@ class TaskPerformed extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -38,11 +39,12 @@ class TaskPerformed extends Notification
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return MailMessage
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line('The introduction to the notification.')
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
@@ -52,6 +54,7 @@ class TaskPerformed extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
@@ -60,7 +63,7 @@ class TaskPerformed extends Notification
             'summary' => $this->task->summary,
             'username' => $this->task->user->name,
             'status' => $this->task->status === 0 ? 'Not Completed' : 'Completed',
-            'performed_at' => $this->task->performed_at ?: null
+            'performed_at' => $this->task->performed_at ?: null,
 
         ];
     }

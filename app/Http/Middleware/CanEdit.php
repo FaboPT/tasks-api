@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use App\Models\Task;
 use App\Traits\ResponseAPI;
-use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,19 +15,16 @@ class CanEdit
 
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         $task = Task::find($request->id);
 
-        if ($this->isEditable($request,$task)) {
+        if ($this->isEditable($request, $task)) {
             return $next($request);
 
         }
+
         return $this->error('Access Denied', Response::HTTP_FORBIDDEN);
 
     }

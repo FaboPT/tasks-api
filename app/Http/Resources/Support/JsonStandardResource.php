@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Support;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,6 +22,4 @@ class JsonStandardResource extends JsonResource
 
         JsonResource::$wrap = $wrap;
     }
-
-
 }

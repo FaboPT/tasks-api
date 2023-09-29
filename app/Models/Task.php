@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,18 +18,19 @@ class Task extends Model
     protected $guarded = ['id'];
 
     /**
-     * RELATIONSHIPS
+     * RELATIONSHIPS.
      */
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**
-     * SCOPES
+     * SCOPES.
+     *
+     * @param mixed $query
+     * @param mixed $userId
      */
-
     public function scopeMyTasks($query, $userId)
     {
         return $query->where('user_id', $userId);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -8,24 +8,24 @@ use Tests\TestCase;
 
 class TasksWithoutAuthentication extends TestCase
 {
-    public function test_get_all_tasks_without_authentication()
+    public function testGetAllTasksWithoutAuthentication()
     {
         $response = $this->json('get', route('task.index'));
 
-        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
+        $response->assertJson(['message' => 'Unauthorized.'])->assertUnauthorized();
     }
 
-    public function test_store_tasks_without_authentication()
+    public function testStoreTasksWithoutAuthentication()
     {
         $data[] = [
             'name' => 'Task test',
         ];
         $response = $this->post(route('task.store'), $data);
 
-        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
+        $response->assertJson(['message' => 'Unauthorized.'])->assertUnauthorized();
     }
 
-    public function test_update_tasks_without_authentication()
+    public function testUpdateTasksWithoutAuthentication()
     {
         $task = Task::findOrFail(1);
         $data[] = [
@@ -33,10 +33,10 @@ class TasksWithoutAuthentication extends TestCase
         ];
         $response = $this->put(route('task.update', $task), $data);
 
-        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
+        $response->assertJson(['message' => 'Unauthorized.'])->assertUnauthorized();
     }
 
-    public function test_set_performed_tasks_without_authentication()
+    public function testSetPerformedTasksWithoutAuthentication()
     {
         $task = Task::findOrFail(1);
         $data[] = [
@@ -45,15 +45,15 @@ class TasksWithoutAuthentication extends TestCase
         ];
         $response = $this->put(route('task.setStatus', $task), $data);
 
-        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
+        $response->assertJson(['message' => 'Unauthorized.'])->assertUnauthorized();
     }
 
-    public function test_destroy_tasks_without_authentication()
+    public function testDestroyTasksWithoutAuthentication()
     {
         $task = Task::findOrFail(1);
 
         $response = $this->delete(route('task.destroy', $task));
 
-        $response->assertJson(["message" => "Unauthorized."])->assertUnauthorized();
+        $response->assertJson(['message' => 'Unauthorized.'])->assertUnauthorized();
     }
 }
