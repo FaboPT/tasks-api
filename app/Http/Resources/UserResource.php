@@ -19,15 +19,15 @@ class UserResource extends JsonStandardResource
      *
      * @param Request $request
      */
-    public function toArray($request): array|\JsonSerializable|Arrayable
+    public function toArray(Request $request): array|\JsonSerializable|Arrayable
     {
 
         return [
-            'name' => $this->name,
-            'email' => $this->email,
+            'name' => $this->__get('name'),
+            'email' => $this->__get('email'),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'created_at' => $this->whenNotNull($this->created_at->format('c')),
-            'updated_at' => $this->whenNotNull($this->updated_at->format('c')),
+            'created_at' => $this->whenNotNull($this->__get('created_at')->format('c')),
+            'updated_at' => $this->whenNotNull($this->__get('updated_at')->format('c')),
         ];
     }
 }

@@ -19,19 +19,18 @@ class TaskResource extends JsonStandardResource
      *
      * @param Request $request
      */
-    public function toArray($request): array|Arrayable|\JsonSerializable
+    public function toArray(Request $request): array|Arrayable|\JsonSerializable
     {
         return parent::toArray($request);
         /*return [
-            "id" => $this->id,
-            "summary" => $this->summary,
-            "status" => $this->status ? 'performed' : 'open',
-            "performed_at" => $this->performed_at,
-            'created_at' => $this->whenNotNull($this->created_at->format('c')),
-            'updated_at' => $this->whenNotNull($this->updated_at?->format('c')),
+            "id" => $this->__get('id'),
+            "summary" => $this->__get('summary'),
+            "status" => $this->__get('status') ? 'performed' : 'open',
+            "performed_at" => $this->__get('performed_at'),
+            'created_at' => $this->whenNotNull($this->__get('created_at')->format('c')),
+            'updated_at' => $this->whenNotNull($this->__get('updated_at')?->format('c')),
             'user' => new UserResource($this->whenLoaded('user')),
             //'user' => (UserResource::make($this->whenLoaded('user'))),
-
         ];*/
     }
 }

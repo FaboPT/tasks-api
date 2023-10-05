@@ -19,7 +19,7 @@ class RoleResource extends JsonStandardResource
      *
      * @param Request $request
      */
-    public function toArray($request): array|\JsonSerializable|Arrayable
+    public function toArray(Request $request): array|\JsonSerializable|Arrayable
     {
         return [
             'name' => $this->name,
