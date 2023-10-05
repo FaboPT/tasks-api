@@ -69,12 +69,12 @@ class TaskRepository extends BaseRepository
 
     private function getTasksTechnician(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->myTasks(Auth::user()?->getAuthIdentifier())->paginate();
+        return $this->task->with('user.roles')->myTasks($this->getAuthIdentifier())->paginate();
     }
 
     private function getTasksManager(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate();
+        return $this->task->with('user.roles')->myTasksManagerWithTechnicianTasks($this->getAuthIdentifier())->paginate();
     }
 
     /*private function isManager(): bool
@@ -87,4 +87,12 @@ class TaskRepository extends BaseRepository
          return ($this->isManager() && $task->user_id === Auth::user()?->getAuthIdentifier()) || ($this->isManager() && $this->isTechnician($task->user));
 
      }*/
+    /**
+     * @return mixed|null
+     */
+    private function getAuthIdentifier(): mixed
+    {
+        return Auth::user()?->getAuthIdentifier();
+    }
+
 }
