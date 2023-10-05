@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskRequest;
-use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\TaskRequest;
+use App\Http\Resources\TaskResource;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
-use App\Notifications\TaskPerformed;
-use App\Repositories\TaskRepository;
 use App\Traits\ResponseAPI;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\TaskResource;
+use App\Notifications\TaskPerformed;
+use App\Repositories\TaskRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,7 +42,7 @@ class TaskService
     public function store(array $data): JsonResponse
     {
         try {
-            DB::transaction(fn() => $this->taskRepository->store($data));
+            DB::transaction(fn () => $this->taskRepository->store($data));
 
             return $this->success('Task successfully created', Response::HTTP_CREATED);
         } catch (\Exception $e) {
@@ -56,7 +56,7 @@ class TaskService
     public function update(int $id, array $data): JsonResponse
     {
         try {
-            DB::transaction(fn() => $this->taskRepository->update($id, $data));
+            DB::transaction(fn () => $this->taskRepository->update($id, $data));
 
             return $this->success('Task successfully updated');
         } catch (\Exception $e) {
@@ -70,7 +70,7 @@ class TaskService
     public function destroy(int $id): JsonResponse
     {
         try {
-            DB::transaction(fn() => $this->taskRepository->destroy($id));
+            DB::transaction(fn () => $this->taskRepository->destroy($id));
 
             return $this->success('Task successfully deleted');
         } catch (\Exception $e) {
@@ -84,7 +84,7 @@ class TaskService
      */
     public function setPerformed(int $id): JsonResponse
     {
-        $task = DB::transaction(function () use (&$id) {
+        $task = DB::transaction(function() use (&$id) {
             $task = $this->taskRepository->setPerformed($id);
             $this->sendNotification($task);
 
@@ -99,7 +99,7 @@ class TaskService
      */
     private function getManagers(): Collection
     {
-        return User::WhereHas('roles', static function ($query) {
+        return User::WhereHas('roles', static function($query) {
             $query->where('name', 'Manager');
         })->get();
     }

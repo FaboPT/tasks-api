@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Traits\ResponseAPI;
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class Authenticate extends Middleware
 {

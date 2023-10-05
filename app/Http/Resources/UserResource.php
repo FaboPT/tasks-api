@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Support\JsonStandardResource;
 use App\Models\User;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Support\Arrayable;
+use App\Http\Resources\Support\JsonStandardResource;
 
 /**
  * @mixin User

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
 
 class TaskRepository extends BaseRepository
 {
