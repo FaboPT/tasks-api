@@ -74,7 +74,6 @@ class TaskRepository extends BaseRepository
 
     private function getTasksManager(): LengthAwarePaginator
     {
-        //        dd($this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate()->toArray());
         return $this->task->with('user.roles')->myTasksManagerWithTechnicianTasks(Auth::user()?->getAuthIdentifier())->paginate();
     }
 
