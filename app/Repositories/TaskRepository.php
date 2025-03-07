@@ -7,6 +7,7 @@ namespace App\Repositories;
 use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -74,7 +75,11 @@ class TaskRepository extends BaseRepository
 
     private function getTasksManager(): LengthAwarePaginator
     {
-        return $this->task->with('user.roles')->myTasksManagerWithTechnicianTasks($this->getAuthIdentifier())->paginate();
+        $query = $this->task->with('user.roles');
+        $this->myTasksManagerWithTechnicianTasks($query, $this->getAuthIdentifier());
+
+        return $query->paginate();
+
     }
 
     /*private function isManager(): bool
@@ -93,6 +98,16 @@ class TaskRepository extends BaseRepository
     private function getAuthIdentifier(): mixed
     {
         return Auth::user()?->getAuthIdentifier();
+    }
+
+    public function myTasks(Builder $query, int $userId): Builder
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public function myTasksManagerWithTechnicianTasks(Builder $query, int $userid): Builder
+    {
+        return $query->where('user_id', $userid)->orWhereIn('user_id', User::role('Technician')->pluck('id')->toArray());
     }
 
 }
