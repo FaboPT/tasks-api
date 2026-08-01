@@ -9,31 +9,31 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "guzzlehttp/guzzle": "^7.10.0",
-        "laravel/framework": "^13.4",
-        "laravel/octane": "^2.17.1",
-        "laravel/sanctum": "^4.3.1",
-        "laravel/tinker": "^3.0",
-        "pusher/pusher-php-server": "^7.2.7",
+        "guzzlehttp/guzzle": "^7.15.2",
+        "laravel/framework": "^13.23",
+        "laravel/octane": "^2.18.0",
+        "laravel/sanctum": "^4.3.3",
+        "laravel/tinker": "^3.0.2",
+        "pusher/pusher-php-server": "^7.2.8",
         "rakutentech/laravel-request-docs": "^2.44",
-        "spatie/laravel-permission": "^7.3",
-        "spiral/roadrunner": "^2025.1.12"
+        "spatie/laravel-permission": "^7.4.2",
+        "spiral/roadrunner": "^2025.1.15"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24.1",
-        "friendsofphp/php-cs-fixer": "^3.95.0",
-        "laravel/sail": "^1.56.0",
+        "friendsofphp/php-cs-fixer": "^3.95.18",
+        "laravel/sail": "^1.64.0",
         "mockery/mockery": "^1.6.12",
-        "nunomaduro/collision": "^8.9.3",
-        "larastan/larastan": "^3.9.4",
+        "nunomaduro/collision": "^8.9.5",
+        "larastan/larastan": "^3.10.0",
         "orchestra/testbench": "^11.1.0",
-        "phpstan/phpstan": "^2.1.46",
-        "phpstan/phpstan-phpunit": "^2.0.16",
-        "phpunit/phpunit": "^12.5.17",
-        "rector/rector": "^2.4.1",
+        "phpstan/phpstan": "^2.2.7",
+        "phpstan/phpstan-phpunit": "^2.0.18",
+        "phpunit/phpunit": "^12.5.33",
+        "rector/rector": "^2.5.9",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-ignition": "^2.12",
-        "squizlabs/php_codesniffer": "^4.0"
+        "squizlabs/php_codesniffer": "^4.0.1"
     },
     "autoload": {
         "psr-4": {
